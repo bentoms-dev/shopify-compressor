@@ -1,0 +1,25 @@
+{
+  "name": "shopify-compressor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "bundle": "node index.js"
+  },
+  "dependencies": {
+    "liquidjs": "^10.9.4",
+    "node-sass": "^9.0.0",
+    "uglify-js": "^3.17.4"
+  },
+  "description": "A simple JavaScript bundler with support for Liquid, CSS, and SCSS files",
+  "keywords": ["javascript", "bundler", "liquid", "css", "scss"],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/my-js-bundler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/my-js-bundler/issues"
+  },
+  "homepage": "https://github.com/yourusername/my-js-bundler#readme"
+}
