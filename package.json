@@ -1,6 +1,6 @@
 {
   "name": "shopify-compressor",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "index.js",
   "scripts": {
     "bundle": "node index.js"
@@ -11,8 +11,8 @@
     "uglify-js": "^3.17.4"
   },
   "description": "A simple JavaScript bundler with support for Liquid, CSS, and SCSS files",
-  "keywords": ["javascript", "bundler", "liquid", "css", "scss"],
-  "author": "Your Name",
+  "keywords": ["javascript", "bundler", "liquid", "css", "scss", "shopify", "compressor"],
+  "author": "Ben Toms",
   "license": "MIT",
   "repository": {
     "type": "git",
