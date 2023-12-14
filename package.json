@@ -1,6 +1,6 @@
 {
   "name": "shopify-compressor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "scripts": {
     "bundle": "node index.js"
@@ -16,10 +16,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/my-js-bundler.git"
+    "url": "https://github.com/bentoms-dev/shopify-compressor/"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/my-js-bundler/issues"
+    "url": "https://github.com/bentoms-dev/shopify-compressor/issues"
   },
-  "homepage": "https://github.com/yourusername/my-js-bundler#readme"
+  "homepage": "https://github.com/bentoms-dev/shopify-compressor/blob/master/README.md"
 }
