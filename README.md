@@ -55,9 +55,9 @@ Feel free to use these files for testing and experimentation.
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
 
-#License
+# License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/bentoms-dev/shopify-compressor/blob/master/LICENSE) file for details.
 
 
 
