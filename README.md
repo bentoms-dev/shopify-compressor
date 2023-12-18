@@ -1,6 +1,6 @@
- # Shopify Compressor
+# Shopify Compressor
 
-A simple JavaScript bundler with support for Liquid, CSS, and SCSS files.
+A versatile asset compressor for Shopify, supporting various file types and bundling features.
 
 ## Table of Contents
 
@@ -14,17 +14,23 @@ A simple JavaScript bundler with support for Liquid, CSS, and SCSS files.
 
 ## Introduction
 
-This project is a JavaScript bundler that allows you to compress and bundle JavaScript, Liquid, CSS, and SCSS files into a single output file for Shopify. It utilizes UglifyJS for JavaScript minification, LiquidJS for processing Liquid files, and node-sass for compiling SCSS to CSS.
+Shopify Compressor is an asset compressor designed for Shopify projects. It offers a range of features to bundle and compress JavaScript, Liquid, CSS, and SCSS files into a single output file, improving performance and optimizing assets for Shopify stores. It leverages popular tools such as UglifyJS, LiquidJS, and node-sass for efficient file processing.
 
 ## Features
 
-- Bundles and compresses Shopify files such as  JavaScript, Liquid, CSS, and SCSS files.
+- Bundles and compresses JavaScript, Liquid, CSS, and SCSS files.
 - Support for Liquid templating in HTML files.
-- Easily configurable and extendable for additional file types.
+- Image conversion to WebP format for improved image optimization.
+- Quality adjustment for image compression.
+- Responsive image generation for various screen sizes.
+- CSS and JS minification for smaller file sizes.
+- Asset versioning for cache busting.
+- Configurable compression levels for different asset types.
+- Image optimization reports for detailed insights.
 
 ## Installation
 
-To use this bundler in your project, you can install it via npm. Run the following command:
+Install the Shopify Compressor in your project using npm:
 
 ```bash
 npm install shopify-compressor
