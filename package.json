@@ -1,25 +1,35 @@
 {
   "name": "shopify-compressor",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "index.js",
   "scripts": {
     "bundle": "node index.js"
   },
   "dependencies": {
-    "liquidjs": "^10.9.4",
-    "node-sass": "^9.0.0",
-    "uglify-js": "^3.17.4",
+    "fs": "0.0.1-security",
+    "image-size": "1.1.1",
     "imagemin": "^7.0.1",
     "imagemin-webp": "^5.0.0",
-    "image-size": "^0.10.3",
-    "minify": "^7.2.0",
-    "sharp": "^0.29.0",
     "inquirer": "^8.1.0",
-    "zlib": "^1.0.5",
-    "fs": "0.0.1-security"
+    "liquidjs": "^10.9.4",
+    "minify": "^7.2.0",
+    "node-sass": "^9.0.0",
+    "sharp": "^0.29.0",
+    "uglify-js": "^3.17.4",
+    "zlib": "^1.0.5"
   },
   "description": "A versatile asset compressor for Shopify, supporting various file types and bundling features.",
-  "keywords": ["javascript", "bundler", "liquid", "css", "scss", "shopify", "compressor", "image optimization", "minifier"],
+  "keywords": [
+    "javascript",
+    "bundler",
+    "liquid",
+    "css",
+    "scss",
+    "shopify",
+    "compressor",
+    "image optimization",
+    "minifier"
+  ],
   "author": "Ben Toms",
   "license": "MIT",
   "repository": {
