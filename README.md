@@ -2,7 +2,7 @@
   <img src="sc-cover.jpg" alt="Shopify Compressor" width="100%">
 </p>
 
-# Shopify Compressor 🚀
+# Shopify Compressor
 
 A powerful, modern asset compressor and optimizer for Shopify themes. Supports WebP, AVIF, CSS/JS minification, SVG optimization, and Liquid templating.
 
@@ -10,20 +10,20 @@ A powerful, modern asset compressor and optimizer for Shopify themes. Supports W
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 
-## ✨ Features
+## Features
 
-- **🖼️ Modern Image Formats** - WebP and AVIF conversion with quality control
-- **📐 Responsive Images** - Auto-generate multiple sizes for srcset
-- **⚡ Lightning Fast** - Uses esbuild for JS and LightningCSS for CSS
-- **🎨 SCSS/Sass Support** - Built-in Sass compilation
-- **🔧 SVG Optimization** - SVGO integration for smaller SVGs
-- **💧 Liquid Templates** - Process Shopify Liquid files with custom filters
-- **👀 Watch Mode** - Auto-rebuild on file changes
-- **💾 Smart Caching** - Skip unchanged files for faster builds
-- **🛠️ CLI & API** - Use from command line or programmatically
-- **📝 TypeScript** - Full type definitions included
+- **Modern Image Formats** - WebP and AVIF conversion with quality control
+- **Responsive Images** - Auto-generate multiple sizes for srcset
+- **Lightning Fast** - Uses esbuild for JS and LightningCSS for CSS
+- **SCSS/Sass Support** - Built-in Sass compilation
+- **SVG Optimization** - SVGO integration for smaller SVGs
+- **Liquid Templates** - Process Shopify Liquid files with custom filters
+- **Watch Mode** - Auto-rebuild on file changes
+- **Smart Caching** - Skip unchanged files for faster builds
+- **CLI & API** - Use from command line or programmatically
+- **TypeScript** - Full type definitions included
 
-## 📦 Installation
+## Installation
 
 ```bash
 npm install shopify-compressor
@@ -35,7 +35,7 @@ Or use directly with npx:
 npx shopify-compressor build
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### CLI Usage
 
@@ -84,7 +84,7 @@ await compressor.minifyJs('app.js', 'app.min.js');
 await compressor.minifyCss('styles.scss', 'styles.min.css');
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 Create a `shopify-compressor.config.js` file in your project root:
 
@@ -156,7 +156,7 @@ export default {
 };
 ```
 
-## 📖 CLI Commands
+## CLI Commands
 
 ### `build`
 
@@ -229,7 +229,7 @@ Options:
   --shopify       Configure for Shopify theme structure
 ```
 
-## 🔧 API Reference
+## API Reference
 
 ### ShopifyCompressor
 
@@ -296,7 +296,7 @@ const liquid = new LiquidProcessor({ globals: { shop: 'My Store' } });
 const html = await liquid.render('Hello {{ shop }}!');
 ```
 
-## 🎨 Shopify Theme Integration
+## Shopify Theme Integration
 
 For Shopify theme development, use the `--shopify` flag when initializing:
 
@@ -345,14 +345,14 @@ Then in your Liquid templates:
 </picture>
 ```
 
-## 📊 Build Reports
+## Build Reports
 
 After each build, you'll see a detailed report:
 
 ```
 ✔ Build complete! Processed 42 files in 2.35s
 
-📊 Build Summary:
+ Build Summary:
    Files processed: 42
    Original size:   2.4 MB
    Compressed size: 890 KB
@@ -360,7 +360,7 @@ After each build, you'll see a detailed report:
    Time:            2.35s
 ```
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -370,11 +370,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [sharp](https://sharp.pixelplumbing.com/) - High-performance image processing
 - [esbuild](https://esbuild.github.io/) - Extremely fast JavaScript bundler
