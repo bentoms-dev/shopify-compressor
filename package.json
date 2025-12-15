@@ -1,6 +1,6 @@
 {
   "name": "shopify-compressor",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A powerful asset compressor and optimizer for Shopify themes. Supports modern image formats (WebP, AVIF), CSS/JS minification, and Liquid templating.",
   "type": "module",
   "main": "./dist/index.cjs",
