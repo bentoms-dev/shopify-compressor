@@ -1,6 +1,6 @@
 {
   "name": "shopify-compressor-pro",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Shopify Compressor Pro — Advanced asset optimization for Shopify themes with parallel processing, HTML reports, asset budgets, and more.",
   "type": "module",
   "main": "./dist/index.cjs",
