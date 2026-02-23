@@ -130,6 +130,7 @@ export function mergeConfig(
     verbose: userConfig.verbose ?? defaultConfig.verbose,
     dryRun: userConfig.dryRun ?? defaultConfig.dryRun,
     clean: userConfig.clean ?? defaultConfig.clean,
+    themeMode: userConfig.themeMode ?? false,
   };
 }
 

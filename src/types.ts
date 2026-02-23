@@ -106,6 +106,8 @@ export interface ShopifyCompressorConfig {
   dryRun?: boolean;
   /** Clean output directory before build */
   clean?: boolean;
+  /** Theme mode - copy full Shopify theme structure, compressing supported files */
+  themeMode?: boolean;
 }
 
 // ============================================
@@ -173,6 +175,7 @@ export interface OptimizationReport {
     css?: CompressionResult[];
     svg?: CompressionResult[];
     liquid?: CompressionResult[];
+    json?: CompressionResult[];
   };
   /** Any errors encountered */
   errors: Array<{ file: string; error: string }>;
@@ -199,6 +202,7 @@ export const SUPPORTED_JS_EXTENSIONS = ['.js', '.mjs', '.cjs', '.ts', '.mts', '.
 export const SUPPORTED_CSS_EXTENSIONS = ['.css', '.scss', '.sass'];
 export const SUPPORTED_LIQUID_EXTENSIONS = ['.liquid'];
 export const SUPPORTED_SVG_EXTENSIONS = ['.svg'];
+export const SUPPORTED_JSON_EXTENSIONS = ['.json'];
 
 // ============================================
 // Event Types (for watch mode)

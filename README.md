@@ -1,67 +1,87 @@
 <p align="center">
-  <img src="sc-cover.jpg" alt="Shopify Compressor" width="100%">
+  <img src="sc-cover.jpg" alt="Shopify Compressor Pro" width="100%">
 </p>
 
-# Shopify Compressor
+# Shopify Compressor Pro
 
-A powerful, modern asset compressor and optimizer for Shopify themes. Supports WebP, AVIF, CSS/JS minification, SVG optimization, and Liquid templating.
+Advanced asset optimiwation for Shopify themes. Everything in the [free version](https://github.com/bentoms-dev/shopify-compressor), plus parallel processing, rich build reports, asset budgets, and more.
 
-[![npm version](https://img.shields.io/npm/v/shopify-compressor.svg)](https://www.npmjs.com/package/shopify-compressor)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://img.shields.io/npm/v/shopify-compressor-pro.svg)](https://www.npmjs.com/package/shopify-compressor-pro)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 
-## Features
+## Free vs Pro
 
-- **Modern Image Formats** - WebP and AVIF conversion with quality control
-- **Responsive Images** - Auto-generate multiple sizes for srcset
-- **Lightning Fast** - Uses esbuild for JS and LightningCSS for CSS
-- **SCSS/Sass Support** - Built-in Sass compilation
-- **SVG Optimization** - SVGO integration for smaller SVGs
-- **Liquid Templates** - Process Shopify Liquid files with custom filters
-- **Watch Mode** - Auto-rebuild on file changes
-- **Smart Caching** - Skip unchanged files for faster builds
-- **CLI & API** - Use from command line or programmatically
-- **TypeScript** - Full type definitions included
+| Feature | Free | Pro |
+|---------|:----:|:---:|
+| Image compression (WebP, AVIF) | ✅ | ✅ |
+| JS/CSS minification (esbuild + LightningCSS) | ✅ | ✅ |
+| SCSS/Sass compilation | ✅ | ✅ |
+| SVG optimisation (SVGO) | ✅ | ✅ |
+| Liquid template processing | ✅ | ✅ |
+| Watch mode | ✅ | ✅ |
+| Smart file caching | ✅ | ✅ |
+| CLI + programmatic API | ✅ | ✅ |
+| **Parallel processing** | ❌ | ✅ |
+| **HTML / JSON / Markdown reports** | ❌ | ✅ |
+| **Asset budget enforcement** | ❌ | ✅ |
+| **Build-over-build history** | ❌ | ✅ |
+| **CI/CD integration** | ❌ | ✅ (Team+) |
+| **Critical CSS extraction** | ❌ | ✅ (Team+) |
+| **Dead code detection** | ❌ | ✅ (Enterprise) |
 
 ## Installation
 
 ```bash
-npm install shopify-compressor
+npm install shopify-compressor-pro
 ```
 
-Or use directly with npx:
+## License Activation
+
+Purchase a license at [bentoms.lemonsqueezy.com](https://bentoms.lemonsqueezy.com/checkout/buy/783054c3-a94d-4260-bd7e-129b20e18e3e), then:
 
 ```bash
-npx shopify-compressor build
+# Activate on this machine
+scomp-pro activate <your-license-key>
+
+# Check status
+scomp-pro status
+
+# Deactivate (to transfer to another machine)
+scomp-pro deactivate
 ```
+
+You can also set the `SCOMP_PRO_LICENSE_KEY` environment variable for CI/CD.
 
 ## Quick Start
 
 ### CLI Usage
 
 ```bash
-# Initialize configuration
-npx shopify-compressor init
+# Initialize a Pro config file
+scomp-pro init
 
-# Build all assets
-npx shopify-compressor build
+# Build with parallel processing + HTML report
+scomp-pro build --report html
+
+# Build with asset budgets
+scomp-pro build --budget "js:50KB,css:30KB" --fail-on-budget
 
 # Watch for changes
-npx shopify-compressor watch
+scomp-pro watch
 
 # Compress a single file
-npx shopify-compressor compress image.png output.webp
+scomp-pro compress hero.png hero.webp
 
-# Bundle JavaScript files
-npx shopify-compressor bundle js bundle.js src/*.js
+# Bundle JavaScript
+scomp-pro bundle js bundle.js src/*.js
 ```
 
 ### Programmatic Usage
 
 ```javascript
-import { ShopifyCompressor } from 'shopify-compressor';
+import { ShopifyCompressorPro } from 'shopify-compressor-pro';
 
-const compressor = new ShopifyCompressor({
+const compressor = new ShopifyCompressorPro({
   input: './assets',
   output: './dist',
   images: {
@@ -72,319 +92,286 @@ const compressor = new ShopifyCompressor({
   },
   js: { minify: true },
   css: { minify: true },
+
+  // Pro features
+  pro: {
+    parallel: {
+      enabled: true,
+      concurrency: 4,
+    },
+    reports: {
+      enabled: true,
+      formats: ['html', 'json'],
+      outputDir: './reports',
+      history: true,
+    },
+    budgets: {
+      enabled: true,
+      failOnExceed: true,
+      rules: [
+        { pattern: 'js', maxTotalSize: '100KB' },
+        { pattern: 'css', maxTotalSize: '50KB' },
+        { pattern: 'images', maxFileSize: '500KB' },
+        { pattern: '*', minCompressionRatio: 0.1 },
+      ],
+    },
+  },
 });
 
-// Run full build
 const report = await compressor.build();
-console.log(`Saved ${report.totalSavings} bytes!`);
 
-// Or process individual files
-await compressor.compressImage('hero.jpg', 'hero.webp');
-await compressor.minifyJs('app.js', 'app.min.js');
-await compressor.minifyCss('styles.scss', 'styles.min.css');
+console.log(`Processed ${report.totalFiles} files`);
+console.log(`Saved ${report.totalSavings} bytes`);
+console.log(`Budgets: ${report.budgetsPassed ? 'All passed' : 'Some exceeded'}`);
 ```
 
 ## Configuration
 
-Create a `shopify-compressor.config.js` file in your project root:
+Create a `shopify-compressor.config.js` file (run `scomp-pro init` to generate one):
 
 ```javascript
-/** @type {import('shopify-compressor').ShopifyCompressorConfig} */
+/** @type {import('shopify-compressor-pro').ShopifyCompressorProConfig} */
 export default {
-  // Input directory or glob patterns
   input: './assets',
-
-  // Output directory
   output: './assets/dist',
 
-  // Image optimization
-  images: {
-    quality: 80,           // 1-100
-    webp: true,            // Generate WebP variants
-    avif: false,           // Generate AVIF variants
-    progressive: true,     // Progressive JPEGs
-    sizes: [480, 768, 1024], // Responsive sizes
-    lazyPlaceholder: true, // Generate blur placeholders
-  },
+  // All standard options from shopify-compressor...
+  images: { quality: 80, webp: true },
+  js: { minify: true },
+  css: { minify: true },
+  svg: { multipass: true },
 
-  // JavaScript
-  js: {
-    minify: true,
-    sourcemap: false,
-    target: 'es2020',
-    bundle: false,
-    treeShaking: true,
-  },
+  // ⚡ Pro features
+  pro: {
+    // Parallel processing — uses all available CPU cores
+    parallel: {
+      enabled: true,
+      // concurrency: 4,  // Set manually, or defaults to CPU count - 1
+    },
 
-  // CSS/SCSS
-  css: {
-    minify: true,
-    sourcemap: false,
-    nesting: true,
-  },
+    // Build reports
+    reports: {
+      enabled: true,
+      formats: ['html'],           // 'html', 'json', 'markdown'
+      outputDir: './reports',
+      history: true,                // Track build-over-build changes
+    },
 
-  // SVG
-  svg: {
-    multipass: true,
-    removeViewBox: false,
-  },
-
-  // Liquid
-  liquid: {
-    globals: {
-      shop_name: 'My Store',
+    // Asset budgets — enforce size limits
+    budgets: {
+      enabled: true,
+      failOnExceed: true,           // Exit code 1 if exceeded (great for CI)
+      rules: [
+        { pattern: 'js', maxTotalSize: '100KB' },
+        { pattern: 'css', maxTotalSize: '50KB' },
+        { pattern: 'images', maxFileSize: '500KB' },
+        { pattern: '*.js', maxFileSize: '30KB' },
+        { pattern: '*', minCompressionRatio: 0.1 },
+      ],
     },
   },
-
-  // Caching
-  cache: {
-    enabled: true,
-    directory: '.shopify-compressor-cache',
-  },
-
-  // Watch mode
-  watch: {
-    paths: ['./assets'],
-    ignore: ['**/node_modules/**'],
-    debounce: 300,
-  },
-
-  // Options
-  verbose: false,
-  dryRun: false,
-  clean: false,
 };
+```
+
+## Pro Features
+
+### Parallel Processing
+
+Processes files concurrently across multiple CPU cores. On a typical 8-core machine, expect **3-5x faster builds** on large themes with 100+ assets.
+
+```bash
+# CLI
+scomp-pro build --parallel --concurrency 8
+
+# Config
+pro: {
+  parallel: { enabled: true, concurrency: 8 }
+}
+```
+
+### Build Reports
+
+Generate rich HTML dashboards, JSON data, or Markdown summaries after each build.
+
+```bash
+# HTML report
+scomp-pro build --report html
+
+# Multiple formats
+scomp-pro build --report html,json,markdown
+
+# Custom output directory
+scomp-pro build --report html --report-dir ./build-reports
+```
+
+The HTML report includes:
+- Overall compression summary with visual stats
+- File-by-file breakdown with savings bars
+- Per-type analysis (images, JS, CSS, SVG, Liquid)
+- Build-over-build comparison (size deltas)
+- Budget pass/fail status
+
+### Asset Budgets
+
+Define maximum sizes per file type and fail CI builds when exceeded.
+
+```bash
+# CLI shorthand
+scomp-pro build --budget "js:50KB,css:30KB" --fail-on-budget
+
+# Config (more flexible)
+pro: {
+  budgets: {
+    enabled: true,
+    failOnExceed: true,
+    rules: [
+      { pattern: 'js', maxTotalSize: '100KB' },
+      { pattern: 'css', maxTotalSize: '50KB' },
+      { pattern: 'images', maxFileSize: '500KB' },
+      { pattern: '*.js', maxFileSize: '30KB' },
+      { pattern: '*', minCompressionRatio: 0.1 },
+      { pattern: 'images', maxFiles: 50 },
+    ],
+  },
+}
+```
+
+Budget rules support:
+- `maxTotalSize` — Maximum combined size for all matched files
+- `maxFileSize` — Maximum size for any individual file
+- `maxFiles` — Maximum number of files
+- `minCompressionRatio` — Minimum compression ratio (0–1)
+
+Patterns: `js`, `css`, `images`, `svg`, `liquid`, `*.ext`, `*` (all), or glob paths.
+
+### CI/CD Integration
+
+Set the license key as an environment variable:
+
+```yaml
+# GitHub Actions
+env:
+  SCOMP_PRO_LICENSE_KEY: ${{ secrets.SCOMP_PRO_KEY }}
+
+steps:
+  - run: npx shopify-compressor-pro build --report json --budget "js:100KB,css:50KB" --fail-on-budget
+```
+
+```yaml
+# GitLab CI
+variables:
+  SCOMP_PRO_LICENSE_KEY: $SCOMP_PRO_KEY
+
+build:
+  script:
+    - npx shopify-compressor-pro build --report json --fail-on-budget
 ```
 
 ## CLI Commands
 
-### `build`
+### License Management
 
-Build and compress all assets.
+| Command | Description |
+|---------|-------------|
+| `scomp-pro activate <key>` | Activate a license key |
+| `scomp-pro deactivate` | Deactivate and remove license |
+| `scomp-pro status` | Show license status and features |
 
-```bash
-shopify-compressor build [options]
+### Build & Process
 
-Options:
-  -i, --input <path>    Input directory (default: "./input")
-  -o, --output <path>   Output directory (default: "./output")
-  -c, --config <path>   Path to config file
-  --clean               Clean output directory before build
-  --no-cache            Disable caching
-  --dry-run             Preview changes without writing
-  -v, --verbose         Enable verbose logging
-  --webp                Generate WebP variants
-  --avif                Generate AVIF variants
-  --no-minify           Disable minification
-```
+| Command | Description |
+|---------|-------------|
+| `scomp-pro build [options]` | Build all assets with Pro features |
+| `scomp-pro watch [options]` | Watch and rebuild on changes |
+| `scomp-pro compress <input> [output]` | Compress a single file |
+| `scomp-pro bundle <js\|css> <output> <files...>` | Bundle files |
+| `scomp-pro init [--shopify]` | Generate config file |
+| `scomp-pro info` | Show project/license info |
 
-### `watch`
+### Pro Build Options
 
-Watch for file changes and rebuild automatically.
-
-```bash
-shopify-compressor watch [options]
-
-Options:
-  -i, --input <path>    Input directory to watch
-  -o, --output <path>   Output directory
-  -c, --config <path>   Path to config file
-  -v, --verbose         Enable verbose logging
-```
-
-### `compress`
-
-Compress a single file.
-
-```bash
-shopify-compressor compress <input> [output] [options]
-
-Options:
-  -q, --quality <n>     Quality 1-100 (default: 80)
-  --webp                Convert to WebP
-  --avif                Convert to AVIF
-```
-
-### `bundle`
-
-Bundle multiple files into one.
-
-```bash
-shopify-compressor bundle <js|css> <output> <files...>
-
-Examples:
-  shopify-compressor bundle js bundle.js src/a.js src/b.js
-  shopify-compressor bundle css styles.css src/*.css
-```
-
-### `init`
-
-Initialize a new configuration file.
-
-```bash
-shopify-compressor init [options]
-
-Options:
-  -f, --force     Overwrite existing config
-  --shopify       Configure for Shopify theme structure
-```
+| Flag | Description |
+|------|-------------|
+| `--parallel` | Enable parallel processing |
+| `--concurrency <n>` | Number of workers |
+| `--report [formats]` | Generate reports (html,json,markdown) |
+| `--report-dir <path>` | Report output directory |
+| `--budget <rules>` | Asset budgets (e.g. `js:50KB,css:30KB`) |
+| `--fail-on-budget` | Exit code 1 on budget exceed |
 
 ## API Reference
 
-### ShopifyCompressor
-
-Main class for asset compression.
+### ShopifyCompressorPro
 
 ```typescript
-import { ShopifyCompressor } from 'shopify-compressor';
+import { ShopifyCompressorPro } from 'shopify-compressor-pro';
 
-const compressor = new ShopifyCompressor(config);
+const pro = new ShopifyCompressorPro(config);
 
-// Full build
-await compressor.build();
+// License
+await pro.activate('LICENSE-KEY');
+await pro.deactivate();
+pro.getLicenseInfo();
 
-// Watch mode
-await compressor.watch();
-await compressor.stopWatch();
+// Build (with parallel + reports + budgets)
+const report = await pro.build();
 
-// Individual operations
-await compressor.compressImage(input, output);
-await compressor.minifyJs(input, output);
-await compressor.bundleJs([...files], output);
-await compressor.minifyCss(input, output);
-await compressor.bundleCss([...files], output);
-await compressor.optimizeSvg(input, output);
-await compressor.processLiquidFile(input, output, data);
+// Watch
+await pro.watch();
+await pro.stopWatch();
 
-// Utilities
-compressor.getConfig();
-compressor.getCacheStats();
-compressor.clearCache();
+// Individual operations (same as base)
+await pro.compressImage(input, output);
+await pro.minifyJs(input, output);
+await pro.bundleJs([...files], output);
+await pro.minifyCss(input, output);
+await pro.bundleCss([...files], output);
+await pro.optimizeSvg(input, output);
+await pro.processLiquidFile(input, output, data);
 ```
 
-### Individual Compressors
-
-Use specific compressors for fine-grained control:
+### Pro-specific APIs
 
 ```typescript
 import {
-  ImageCompressor,
-  JsMinifier,
-  CssMinifier,
-  SvgOptimizer,
-  LiquidProcessor,
-} from 'shopify-compressor';
-
-// Image compression with AVIF
-const imageCompressor = new ImageCompressor({ quality: 85, avif: true });
-await imageCompressor.compress('photo.jpg', 'photo.avif');
-
-// JavaScript bundling
-const jsMinifier = new JsMinifier({ bundle: true });
-await jsMinifier.bundle(['a.js', 'b.js'], 'bundle.js');
-
-// SCSS compilation
-const cssMinifier = new CssMinifier();
-await cssMinifier.minify('styles.scss', 'styles.min.css');
-
-// SVG optimization
-const svgOptimizer = new SvgOptimizer();
-const dataUrl = await svgOptimizer.toDataUrl('icon.svg');
-
-// Liquid rendering
-const liquid = new LiquidProcessor({ globals: { shop: 'My Store' } });
-const html = await liquid.render('Hello {{ shop }}!');
+  ParallelProcessor,
+  ReportGenerator,
+  BudgetEnforcer,
+  LicenseManager,
+} from 'shopify-compressor-pro';
 ```
 
-## Shopify Theme Integration
+## License Tiers
 
-For Shopify theme development, use the `--shopify` flag when initializing:
+| | Individual | Team | Enterprise |
+|---|:---:|:---:|:---:|
+| **Price** | €29/year | €99/year | €249/year |
+| **Machines** | 3 | 10 | Unlimited |
+| Parallel processing | ✅ | ✅ | ✅ |
+| Build reports | ✅ | ✅ | ✅ |
+| Asset budgets | ✅ | ✅ | ✅ |
+| CI/CD integration | ❌ | ✅ | ✅ |
+| Critical CSS | ❌ | ✅ | ✅ |
+| Dead code detection | ❌ | ❌ | ✅ |
+| Liquid optimisation | ❌ | ❌ | ✅ |
+| Priority support | ❌ | ✅ | ✅ |
 
-```bash
-npx shopify-compressor init --shopify
-```
-
-This configures optimal settings for Shopify's asset structure and includes Shopify-specific Liquid filters like `asset_url`, `img_url`, `money`, etc.
-
-### Recommended Shopify Workflow
-
-```javascript
-// shopify-compressor.config.js
-export default {
-  input: './assets',
-  output: './assets/dist',
-  images: {
-    webp: true,
-    sizes: [480, 768, 1024, 1440],
-    lazyPlaceholder: true,
-  },
-  watch: {
-    paths: ['./assets'],
-  },
-};
-```
-
-Then in your Liquid templates:
-
-```liquid
-{% comment %} Use responsive images {% endcomment %}
-<img
-  src="{{ 'hero.jpg' | asset_url }}"
-  srcset="
-    {{ 'hero-480w.jpg' | asset_url }} 480w,
-    {{ 'hero-768w.jpg' | asset_url }} 768w,
-    {{ 'hero-1024w.jpg' | asset_url }} 1024w
-  "
-  loading="lazy"
-/>
-
-{% comment %} Use WebP with fallback {% endcomment %}
-<picture>
-  <source srcset="{{ 'hero.webp' | asset_url }}" type="image/webp">
-  <img src="{{ 'hero.jpg' | asset_url }}" alt="Hero">
-</picture>
-```
-
-## Build Reports
-
-After each build, you'll see a detailed report:
-
-```
-✔ Build complete! Processed 42 files in 2.35s
-
- Build Summary:
-   Files processed: 42
-   Original size:   2.4 MB
-   Compressed size: 890 KB
-   Total savings:   1.51 MB (63%)
-   Time:            2.35s
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Purchase at [bentoms.lemonsqueezy.com](https://bentoms.lemonsqueezy.com/checkout/buy/783054c3-a94d-4260-bd7e-129b20e18e3e)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This is proprietary software. See the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- [sharp](https://sharp.pixelplumbing.com/) - High-performance image processing
-- [esbuild](https://esbuild.github.io/) - Extremely fast JavaScript bundler
-- [LightningCSS](https://lightningcss.dev/) - Blazing fast CSS parser and transformer
-- [SVGO](https://github.com/svg/svgo) - SVG optimizer
-- [LiquidJS](https://liquidjs.com/) - Liquid template engine
+Built on top of [shopify-compressor](https://github.com/bentoms-dev/shopify-compressor) (MIT).
+
+- [sharp](https://sharp.pixelplumbing.com/) — High-performance image processing
+- [esbuild](https://esbuild.github.io/) — Extremely fast JavaScript bundler
+- [LightningCSS](https://lightningcss.dev/) — Blazing fast CSS transformer
+- [SVGO](https://github.com/svg/svgo) — SVG optimizer
+- [LiquidJS](https://liquidjs.com/) — Liquid template engine
 
 ---
 
 Made with ❤️ by [Ben Toms](https://github.com/bentoms-dev)
-
-
-

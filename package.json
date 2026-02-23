@@ -1,7 +1,7 @@
 {
-  "name": "shopify-compressor",
-  "version": "2.0.1",
-  "description": "A powerful asset compressor and optimizer for Shopify themes. Supports modern image formats (WebP, AVIF), CSS/JS minification, and Liquid templating.",
+  "name": "shopify-compressor-pro",
+  "version": "1.0.3",
+  "description": "Shopify Compressor Pro — Advanced asset optimization for Shopify themes with parallel processing, HTML reports, asset budgets, and more.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -19,8 +19,8 @@
     }
   },
   "bin": {
-    "shopify-compressor": "./dist/cli.js",
-    "scomp": "./dist/cli.js"
+    "shopify-compressor-pro": "./dist/cli.js",
+    "scomp-pro": "./dist/cli.js"
   },
   "files": [
     "dist"
@@ -49,10 +49,10 @@
     "glob": "^10.3.10",
     "image-size": "^1.1.1",
     "lightningcss": "^1.22.1",
-    "liquidjs": "^10.10.0",
     "ora": "^8.0.1",
     "sass": "^1.69.5",
     "sharp": "^0.33.1",
+    "shopify-compressor": "^2.0.0",
     "svgo": "^3.1.0"
   },
   "devDependencies": {
@@ -82,16 +82,20 @@
     "svg",
     "performance",
     "shopify-theme",
-    "assets"
+    "assets",
+    "parallel",
+    "reports",
+    "budgets",
+    "pro"
   ],
   "author": "Ben Toms",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bentoms-dev/shopify-compressor.git"
+    "url": "git+https://github.com/bentoms-dev/shopify-compressor-pro.git"
   },
   "bugs": {
-    "url": "https://github.com/bentoms-dev/shopify-compressor/issues"
+    "url": "https://github.com/bentoms-dev/shopify-compressor-pro/issues"
   },
-  "homepage": "https://github.com/bentoms-dev/shopify-compressor#readme"
+  "homepage": "https://shopifycompressor.com/pro"
 }

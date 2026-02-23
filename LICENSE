@@ -1,21 +1,48 @@
-MIT License
+Shopify Compressor Pro - Commercial License
 
-Copyright (c) 2023 Ben Toms
+Copyright (c) 2023-2026 Ben Toms. All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This software and associated documentation files (the "Software") are the
+proprietary property of Ben Toms and are protected by copyright law.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+GRANT OF LICENSE
+
+Subject to the terms of this license and payment of applicable fees, Ben Toms
+grants you a non-exclusive, non-transferable, revocable license to:
+
+  1. Use the Software for personal or commercial development purposes.
+  2. Install the Software on machines according to your license tier:
+     - Individual: 1 machine
+     - Team: Up to 5 machines
+     - Enterprise: Unlimited machines within one organisation
+
+RESTRICTIONS
+
+You may NOT:
+
+  1. Redistribute, sublicense, rent, lease, or lend the Software.
+  2. Modify, decompile, reverse engineer, or disassemble the Software.
+  3. Remove or alter any proprietary notices, labels, or marks.
+  4. Share license keys with unauthorised users.
+  5. Use the Software after license expiration without renewal.
+
+TERMINATION
+
+This license is effective until terminated. It will terminate immediately
+without notice if you fail to comply with any term of this agreement. Upon
+termination, you must destroy all copies of the Software.
+
+NO WARRANTY
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL BEN TOMS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+For licensing enquiries: https://bentoms.lemonsqueezy.com/checkout/buy/783054c3-a94d-4260-bd7e-129b20e18e3e

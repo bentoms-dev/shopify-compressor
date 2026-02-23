@@ -39,9 +39,13 @@ describe('File utilities', () => {
       expect(getFileType('product.liquid')).toBe('liquid');
     });
 
+    it('should identify JSON files', () => {
+      expect(getFileType('data.json')).toBe('json');
+    });
+
     it('should return unknown for unsupported files', () => {
       expect(getFileType('readme.md')).toBe('unknown');
-      expect(getFileType('data.json')).toBe('unknown');
+      expect(getFileType('readme.txt')).toBe('unknown');
     });
   });
 

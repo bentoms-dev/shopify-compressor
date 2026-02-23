@@ -1,4 +1,4 @@
-import { stat } from 'fs/promises';
+import { stat, copyFile as fsCopyFile, mkdir } from 'fs/promises';
 import { extname, basename, dirname, join, relative } from 'path';
 import { glob } from 'glob';
 import {
@@ -7,9 +7,17 @@ import {
   SUPPORTED_CSS_EXTENSIONS,
   SUPPORTED_LIQUID_EXTENSIONS,
   SUPPORTED_SVG_EXTENSIONS,
+  SUPPORTED_JSON_EXTENSIONS,
 } from '../types.js';
 
-export type FileType = 'image' | 'js' | 'css' | 'svg' | 'liquid' | 'unknown';
+export type FileType = 'image' | 'js' | 'css' | 'svg' | 'liquid' | 'json' | 'unknown';
+
+/**
+ * Check if a string contains glob characters
+ */
+export function hasGlobChars(str: string): boolean {
+  return /[*?{}\[\]]/.test(str);
+}
 
 /**
  * Determine the type of file based on extension
@@ -31,6 +39,9 @@ export function getFileType(filePath: string): FileType {
   }
   if (SUPPORTED_LIQUID_EXTENSIONS.includes(ext)) {
     return 'liquid';
+  }
+  if (SUPPORTED_JSON_EXTENSIONS.includes(ext)) {
+    return 'json';
   }
 
   return 'unknown';
@@ -119,6 +130,7 @@ export function groupFilesByType(files: string[]): Record<FileType, string[]> {
     css: [],
     svg: [],
     liquid: [],
+    json: [],
     unknown: [],
   };
 
@@ -167,4 +179,20 @@ export function isShopifyTheme(dir: string): boolean {
   }
 
   return matches >= 3;
+}
+
+/**
+ * Copy a file to an output directory, preserving relative path structure.
+ * Creates parent directories as needed.
+ */
+export async function copyFilePreserving(
+  inputPath: string,
+  inputBase: string,
+  outputDir: string
+): Promise<string> {
+  const relativePath = relative(inputBase, inputPath);
+  const outputPath = join(outputDir, relativePath);
+  await mkdir(dirname(outputPath), { recursive: true });
+  await fsCopyFile(inputPath, outputPath);
+  return outputPath;
 }

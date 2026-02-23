@@ -1126,6 +1126,11 @@ fs.realpath@^1.0.0:
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
+fsevents@~2.3.2, fsevents@~2.3.3:
+  version "2.3.3"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz"
+  integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
+
 get-east-asian-width@^1.0.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/get-east-asian-width/-/get-east-asian-width-1.4.0.tgz"
@@ -1950,6 +1955,25 @@ shebang-regex@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/shebang-regex/-/shebang-regex-3.0.0.tgz"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
+
+shopify-compressor@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/shopify-compressor/-/shopify-compressor-2.0.1.tgz"
+  integrity sha512-+4AQ2tKmbyqoI1ODW+RbodOTlavdFIcKYJfEaCs3wBoKrDzW2OzQuLZh53+0SrEVgN4BAkAXvfXVbX25MpkW7g==
+  dependencies:
+    chalk "^5.3.0"
+    chokidar "^3.5.3"
+    commander "^11.1.0"
+    consola "^3.2.3"
+    esbuild "^0.19.8"
+    glob "^10.3.10"
+    image-size "^1.1.1"
+    lightningcss "^1.22.1"
+    liquidjs "^10.10.0"
+    ora "^8.0.1"
+    sass "^1.69.5"
+    sharp "^0.33.1"
+    svgo "^3.1.0"
 
 siginfo@^2.0.0:
   version "2.0.0"

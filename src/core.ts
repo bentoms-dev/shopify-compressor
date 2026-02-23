@@ -1,6 +1,6 @@
 import { mkdir, rm } from 'fs/promises';
 import { existsSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { resolve } from 'path';
 import ora from 'ora';
 
 import { ImageCompressor } from './compressors/image.js';
@@ -8,6 +8,7 @@ import { JsMinifier } from './compressors/js.js';
 import { CssMinifier } from './compressors/css.js';
 import { SvgOptimizer } from './compressors/svg.js';
 import { LiquidProcessor } from './compressors/liquid.js';
+import { JsonMinifier } from './compressors/json.js';
 import { Watcher } from './watcher.js';
 import { FileCache } from './utils/cache.js';
 import { logger, setLogLevel } from './utils/logger.js';
@@ -17,6 +18,8 @@ import {
   getOutputPath,
   formatBytes,
   getFileType,
+  hasGlobChars,
+  copyFilePreserving,
 } from './utils/files.js';
 import { loadConfig, mergeConfig } from './config/loader.js';
 import type {
@@ -33,6 +36,7 @@ export class ShopifyCompressor {
   private cssMinifier: CssMinifier;
   private svgOptimizer: SvgOptimizer;
   private liquidProcessor: LiquidProcessor;
+  private jsonMinifier: JsonMinifier;
   private cache: FileCache;
   private watcher: Watcher | null = null;
 
@@ -50,6 +54,7 @@ export class ShopifyCompressor {
     this.cssMinifier = new CssMinifier(this.config.css);
     this.svgOptimizer = new SvgOptimizer(this.config.svg);
     this.liquidProcessor = new LiquidProcessor(this.config.liquid);
+    this.jsonMinifier = new JsonMinifier();
 
     // Initialize cache
     this.cache = new FileCache(
@@ -91,12 +96,30 @@ export class ShopifyCompressor {
 
       // Find all input files
       spinner.text = 'Finding files...';
-      const inputPatterns = Array.isArray(this.config.input)
-        ? this.config.input
-        : [this.config.input + '/**/*'];
+
+      // In theme mode, find ALL files in the theme root
+      const inputPatterns = this.config.themeMode
+        ? ['./**/*']
+        : Array.isArray(this.config.input)
+          ? this.config.input
+          : hasGlobChars(this.config.input)
+            ? [this.config.input]
+            : [this.config.input + '/**/*'];
+
+      const themeIgnore = this.config.themeMode
+        ? [
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/.git/**',
+            '**/.shopify-compressor-cache/**',
+            '**/.shopify-compressor-pro/**',
+            '**/reports/**',
+            `${this.config.output}/**`,
+          ]
+        : ['**/node_modules/**', '**/dist/**'];
 
       const files = await findFiles(inputPatterns, {
-        ignore: ['**/node_modules/**', '**/dist/**'],
+        ignore: themeIgnore,
       });
 
       if (files.length === 0) {
@@ -106,7 +129,14 @@ export class ShopifyCompressor {
 
       // Group files by type
       const grouped = groupFilesByType(files);
-      spinner.text = `Found ${files.length} files to process...`;
+      const supportedCount = files.length - (grouped.unknown?.length || 0);
+      const copyCount = grouped.unknown?.length || 0;
+
+      if (this.config.themeMode) {
+        spinner.text = `Found ${files.length} files (${supportedCount} to compress, ${copyCount} to copy)...`;
+      } else {
+        spinner.text = `Found ${files.length} files to process...`;
+      }
 
       const report: OptimizationReport = {
         totalFiles: 0,
@@ -149,6 +179,32 @@ export class ShopifyCompressor {
         report.byType.liquid = await this.processLiquid(grouped.liquid);
       }
 
+      // Process JSON files
+      if (grouped.json.length > 0) {
+        spinner.text = `Minifying ${grouped.json.length} JSON files...`;
+        report.byType.json = await this.processJson(grouped.json);
+      }
+
+      // In theme mode, copy all unsupported files to preserve directory structure
+      if (this.config.themeMode && grouped.unknown && grouped.unknown.length > 0) {
+        spinner.text = `Copying ${grouped.unknown.length} uncompressed files...`;
+        const inputBase = this.getInputBase();
+
+        for (const file of grouped.unknown) {
+          if (this.config.dryRun) {
+            logger.info(`[DRY RUN] Would copy: ${file}`);
+            continue;
+          }
+
+          try {
+            await copyFilePreserving(file, inputBase, this.config.output);
+            logger.debug(`Copied: ${file}`);
+          } catch (error) {
+            report.errors.push({ file, error: `Copy failed: ${error}` });
+          }
+        }
+      }
+
       // Calculate totals
       const allResults = [
         ...(report.byType.images || []),
@@ -156,6 +212,7 @@ export class ShopifyCompressor {
         ...(report.byType.css || []),
         ...(report.byType.svg || []),
         ...(report.byType.liquid || []),
+        ...(report.byType.json || []),
       ];
 
       report.totalFiles = allResults.length;
@@ -171,12 +228,22 @@ export class ShopifyCompressor {
       // Save cache
       await this.cache.save();
 
+      const themeNote = this.config.themeMode
+        ? ` (${copyCount} files copied)`
+        : '';
       spinner.succeed(
-        `Build complete! Processed ${report.totalFiles} files in ${(report.totalTime / 1000).toFixed(2)}s`
+        `Build complete! Processed ${report.totalFiles} files in ${(report.totalTime / 1000).toFixed(2)}s${themeNote}`
       );
       logger.success(
         `Saved ${formatBytes(report.totalSavings)} (${(report.overallRatio * 100).toFixed(1)}% reduction)`
       );
+
+      if (this.config.themeMode) {
+        logger.success(
+          `Deploy-ready theme written to: ${this.config.output}\n` +
+          `   Deploy with: shopify theme push --path=${this.config.output}`
+        );
+      }
 
       return report;
     } catch (error) {
@@ -254,6 +321,9 @@ export class ShopifyCompressor {
           break;
         case 'liquid':
           await this.processLiquid([path]);
+          break;
+        case 'json':
+          await this.processJson([path]);
           break;
         default:
           logger.debug(`Skipping unsupported file type: ${path}`);
@@ -427,13 +497,58 @@ export class ShopifyCompressor {
   }
 
   /**
+   * Process JSON files
+   */
+  private async processJson(files: string[]): Promise<CompressionResult[]> {
+    const results: CompressionResult[] = [];
+    const inputBase = this.getInputBase();
+
+    for (const file of files) {
+      const outputPath = getOutputPath(file, inputBase, this.config.output);
+
+      if (!(await this.cache.isChanged(file, outputPath))) {
+        logger.debug(`Skipping unchanged: ${file}`);
+        continue;
+      }
+
+      if (this.config.dryRun) {
+        logger.info(`[DRY RUN] Would minify: ${file}`);
+        continue;
+      }
+
+      try {
+        const result = await this.jsonMinifier.minify(file, outputPath);
+        await this.cache.set(file, outputPath);
+        results.push(result);
+      } catch (error) {
+        logger.error(`Failed to minify ${file}: ${error}`);
+      }
+    }
+
+    return results;
+  }
+
+  /**
    * Get the base input directory
    */
   private getInputBase(): string {
     if (Array.isArray(this.config.input)) {
-      return resolve(dirname(this.config.input[0]));
+      return resolve(this.stripGlob(this.config.input[0]));
     }
-    return resolve(this.config.input);
+    return resolve(this.stripGlob(this.config.input));
+  }
+
+  /**
+   * Strip glob characters from a path to get the base directory.
+   */
+  private stripGlob(pattern: string): string {
+    const parts = pattern.split('/');
+    const nonGlobParts: string[] = [];
+    for (const part of parts) {
+      if (/[*?{}\[\]]/.test(part)) break;
+      nonGlobParts.push(part);
+    }
+    return nonGlobParts.join('/') || '.';
   }
 
   /**
